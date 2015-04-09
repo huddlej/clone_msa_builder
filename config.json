@@ -1,5 +1,6 @@
 {
     "query_sequence": "/net/eichler/vol18/jlhudd/LCR16a/data/lcr16a/lcr16a.fasta",
+    "repeat_sequences": "/net/eichler/vol18/jlhudd/LCR16a/data/npip/npip.exons.fasta",
     "species": ["marmoset"],
     "clones_by_species": {
         "marmoset": [
