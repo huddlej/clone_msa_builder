@@ -29,6 +29,7 @@ def _get_clones_for_species(wildcards):
 rule all:
     input:
         expand("multiple_sequence_alignments_by_species/{species}.fasta", species=SPECIES),
+        #expand("pairwise_identity/{species}.pdf", species=SPECIES),
         "dotplots.pdf"
     params: sge_opts=""
 
@@ -36,13 +37,25 @@ rule merge_dotplots:
     input: expand("dotplots/{clone}.pdf", clone=CLONES)
     output: "dotplots.pdf"
     params: sge_opts=""
-    shell: "gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile={output} {input}"
+    shell: "gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile={output} `for file in {input}; do if [[ -e $file ]]; then echo $file; fi; done`"
+
+rule plot_pairwise_identity_by_species:
+    input: "multiple_sequence_alignments_by_species/{species}.fasta"
+    output: "pairwise_identity/{species}.pdf"
+    params: sge_opts=""
+    shell: "Rscript plot_pairwise_identity.R `dirname {input}` {output}"
+
+# rule mask_repeats_in_alignment:
+#     input: alignment="multiple_sequence_alignments_by_species/{species}.fasta", repeats=config["repeat_sequences"]
+#     output: "masked_alignments_by_species/{species}.consensus.fa"
+#     params: sge_opts="", window="1000", window_slide="100"
+#     shell: "mkdir -p `dirname {output}`; cd `dirname {output}`; ln -s ../{input.alignment} .; mam `basename {input.alignment}` -sw={params.window_slide} -ww={params.window} -program=crossmatch -fasta=on -exonfile={input.repeats} -slider=on -pc=c -identity=on -consensus=on -alnstats=on"
 
 rule align_regions_by_species:
     input: "query_regions_by_species/{species}.fasta"
     output: "multiple_sequence_alignments_by_species/{species}.fasta"
-    params: sge_opts="-l mfree=1G -pe serial 4", threads="4"
-    shell: "mafft-linsi --thread {params.threads} {input} > {output}"
+    params: sge_opts="-l mfree=10G -pe serial 2", threads="2"
+    shell: "mafft --auto --thread {params.threads} {input} > {output}"
 
 rule combine_query_regions_by_species:
     input: _get_clones_for_species
@@ -59,7 +72,7 @@ rule extract_query_region_from_clone:
 rule convert_psl_to_merged_bed:
     input: alignment="psl_alignments/{clone}.psl", clone_index="original_sequences/{clone}.fasta.fai"
     output: "query_placements/{clone}.bed"
-    params: sge_opts="", merge_distance="10000", slop="5000"
+    params: sge_opts="", merge_distance="10000", slop="1000"
     shell: "pslToBed {input.alignment} /dev/stdout | bedtools merge -i stdin -d {params.merge_distance} -s | bedtools slop -i stdin -g {input.clone_index} -b {params.slop} > {output}"
 
 rule convert_lav_to_psl:
@@ -72,7 +85,11 @@ rule plot_dotplot_for_query_in_clone:
     input: "dotplots/{clone}.dotplot"
     output: "dotplots/{clone}.pdf"
     params: sge_opts=""
-    shell: "Rscript ~jlhudd/fasta_tools/lastz_dotplot.R {input} {output}"
+    run:
+        try:
+            shell("Rscript ~jlhudd/fasta_tools/lastz_dotplot.R {input} {output}")
+        except:
+            shell("touch {output}")
 
 rule find_query_in_clone:
     input: clone="original_sequences/{clone}.fasta", query=config["query_sequence"]
@@ -93,4 +110,4 @@ rule get_clone:
     shell: "rsync {input} {output}"
 
 rule clean:
-    shell: "rm -rf query_* psl_alignments/ original_sequences/ multiple_sequence_alignments_by_species/ lav_alignments/ dotplots/"
+    shell: "rm -rf query_* psl_alignments/ original_sequences/ multiple_sequence_alignments_by_species/ lav_alignments/ dotplots/ masked_alignments_by_species/ pairwise_identity/ dotplots.pdf"
