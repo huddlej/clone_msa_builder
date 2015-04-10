@@ -118,7 +118,7 @@ rule get_clone:
     input: _get_sequence_for_clone
     output: "original_sequences/{clone}.fasta"
     params: sge_opts=""
-    shell: "rsync {input} {output}"
+    shell: "cat {input} > {output}"
 
 rule clean:
     shell: "rm -rf query_* psl_alignments/ original_sequences/ multiple_sequence_alignments_by_species/ lav_alignments/ dotplots/ masked_alignments_by_species/ pairwise_identity/ dotplots.pdf merged_query_placements/"
