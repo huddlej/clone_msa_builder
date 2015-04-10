@@ -26,7 +26,7 @@ pairs.list <- as.list(data.frame(t(as.matrix(pairs)), stringsAsFactors=FALSE))
 GENOME.class <- set.populations(GENOME.class, pairs.list)
 
 # Calculate total segregating sites per population across windows.
-GENOME.class.slide <- sliding.window.transform(GENOME.class, width=window.size, jump=window.slide, type=2, whole.data=TRUE)
+GENOME.class.slide <- sliding.window.transform(GENOME.class, width=window.size, jump=window.slide, type=2, whole.data=FALSE)
 GENOME.class.slide <- neutrality.stats(GENOME.class.slide)
 
 # Use segregating sites as a proxy for mismatches in a normal pairwise alignment.
