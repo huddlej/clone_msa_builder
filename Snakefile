@@ -1,6 +1,7 @@
 #
 # Define configuration.
 #
+import os
 
 configfile: "config.json"
 SPECIES = config["species"]
@@ -64,16 +65,26 @@ rule combine_query_regions_by_species:
     shell: "sed 's/>/>{wildcards.species}_/' {input} > {output}"
 
 rule extract_query_region_from_clone:
-    input: fasta="original_sequences/{clone}.fasta", regions="query_placements/{clone}.bed"
+    input: fasta="original_sequences/{clone}.fasta", regions="merged_query_placements/{clone}.bed"
     output: "query_regions/{clone}.fasta"
     params: sge_opts=""
     shell: "bedtools getfasta -fi {input.fasta} -bed {input.regions} -fo {output} -s"
 
+rule convert_bed_to_merged_bed:
+    input: bed="query_placements/{clone}.bed", clone_index="original_sequences/{clone}.fasta.fai"
+    output: "merged_query_placements/{clone}.bed"
+    params: sge_opts="", merge_distance="10000", slop="5000"
+    run:
+        if os.stat(input["bed"]).st_size > 0:
+            shell("bedtools merge -i {input.bed} -d {params.merge_distance} -s -c 4,5,6 -o distinct,mean,distinct | bedtools slop -i stdin -g {input.clone_index} -b {params.slop} > {output}")
+        else:
+            shell("touch {output}")
+
 rule convert_psl_to_merged_bed:
-    input: alignment="psl_alignments/{clone}.psl", clone_index="original_sequences/{clone}.fasta.fai"
+    input: "psl_alignments/{clone}.psl"
     output: "query_placements/{clone}.bed"
-    params: sge_opts="", merge_distance="10000", slop="1000"
-    shell: "pslToBed {input.alignment} /dev/stdout | bedtools merge -i stdin -d {params.merge_distance} -s | bedtools slop -i stdin -g {input.clone_index} -b {params.slop} > {output}"
+    params: sge_opts=""
+    shell: "pslToBed {input} {output}"
 
 rule convert_lav_to_psl:
     input: "lav_alignments/{clone}.lav"
@@ -110,4 +121,4 @@ rule get_clone:
     shell: "rsync {input} {output}"
 
 rule clean:
-    shell: "rm -rf query_* psl_alignments/ original_sequences/ multiple_sequence_alignments_by_species/ lav_alignments/ dotplots/ masked_alignments_by_species/ pairwise_identity/ dotplots.pdf"
+    shell: "rm -rf query_* psl_alignments/ original_sequences/ multiple_sequence_alignments_by_species/ lav_alignments/ dotplots/ masked_alignments_by_species/ pairwise_identity/ dotplots.pdf merged_query_placements/"
