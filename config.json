@@ -1,35 +1,15 @@
 {
-    "query_sequence": "/net/eichler/vol18/jlhudd/LCR16a/data/lcr16a/lcr16a.fasta",
-    "repeat_sequences": "/net/eichler/vol18/jlhudd/LCR16a/data/npip/npip.exons.fasta",
-    "species": ["marmoset"],
+    "query_sequence": "/path/to/query/sequence.fasta",
+    "repeat_sequences": "/path/to/repeat/sequences.fasta",
+    "species": ["species_name_1"],
     "clones_by_species": {
-        "marmoset": [
-            "CH259-145L14",
-            "CH259-157F4",
-            "CH259-177K12",
-            "CH259-209H22",
-            "CH259-211A21",
-            "CH259-239O23",
-            "CH259-271C3",
-            "CH259-282N4",
-            "CH259-31C12",
-            "CH259-40E8",
-            "CH259-84B10",
-            "CH259-98H16"
+        "species_name_1": [
+            "clone_name_1",
+            "clone_name_2"
         ]
     },
     "clone_paths": {
-        "CH259-145L14": "/net/eichler/vol18/jlhudd/LCR16a/data/clones/local/marmoset/CH259-145L14.fasta",
-        "CH259-157F4": "/net/eichler/vol18/jlhudd/LCR16a/data/clones/local/marmoset/CH259-157F4.fasta",
-        "CH259-177K12": "/net/eichler/vol18/jlhudd/LCR16a/data/clones/local/marmoset/CH259-177K12.fasta",
-        "CH259-209H22": "/net/eichler/vol18/jlhudd/LCR16a/data/clones/local/marmoset/CH259-209H22.fasta",
-        "CH259-211A21": "/net/eichler/vol18/jlhudd/LCR16a/data/clones/local/marmoset/CH259-211A21.fasta",
-        "CH259-239O23": "/net/eichler/vol18/jlhudd/LCR16a/data/clones/local/marmoset/CH259-239O23.fasta",
-        "CH259-271C3": "/net/eichler/vol18/jlhudd/LCR16a/data/clones/local/marmoset/CH259-271C3.fasta",
-        "CH259-282N4": "/net/eichler/vol18/jlhudd/LCR16a/data/clones/local/marmoset/CH259-282N4.fasta",
-        "CH259-31C12": "/net/eichler/vol18/jlhudd/LCR16a/data/clones/local/marmoset/CH259-31C12.fasta",
-        "CH259-40E8": "/net/eichler/vol18/jlhudd/LCR16a/data/clones/local/marmoset/CH259-40E8.fasta",
-        "CH259-84B10": "/net/eichler/vol18/jlhudd/LCR16a/data/clones/local/marmoset/CH259-84B10.fasta",
-        "CH259-98H16": "/net/eichler/vol18/jlhudd/LCR16a/data/clones/local/marmoset/CH259-98H16.fasta"
+        "clone_name_1": "/path/to/clone_name_1.fasta",
+        "clone_name_2": "/path/to/clone_name_2.fasta"
     }
 }
