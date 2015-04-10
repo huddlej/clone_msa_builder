@@ -1,3 +1,4 @@
+module load anaconda/2.1.0
 module load cross_match/1.090518
 module load EMBOSS/6.4.0
 module load lastz/1.02.00
