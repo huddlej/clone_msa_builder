@@ -31,6 +31,7 @@ rule all:
     input:
         expand("multiple_sequence_alignments_by_species/{species}.fasta", species=SPECIES),
         expand("pairwise_identity/{species}.pdf", species=SPECIES),
+        expand("plotted_multiple_sequence_alignments_by_species/{species}.html", species=SPECIES),
         "dotplots.pdf"
     params: sge_opts=""
 
@@ -39,6 +40,12 @@ rule merge_dotplots:
     output: "dotplots.pdf"
     params: sge_opts=""
     shell: "gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile={output} `for file in {input}; do if [[ -e $file ]]; then echo $file; fi; done`"
+
+rule show_multiple_sequence_alignment_by_species:
+    input: "multiple_sequence_alignments_by_species/{species}.fasta"
+    output: "plotted_multiple_sequence_alignments_by_species/{species}.html"
+    params: sge_opts=""
+    shell: "showalign -sequence {input} -outfile {output} -order=a -html -width 100 -show S"
 
 rule plot_pairwise_identity_by_species:
     input: "multiple_sequence_alignments_by_species/{species}.fasta"
