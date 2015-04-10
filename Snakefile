@@ -30,7 +30,7 @@ def _get_clones_for_species(wildcards):
 rule all:
     input:
         expand("multiple_sequence_alignments_by_species/{species}.fasta", species=SPECIES),
-        #expand("pairwise_identity/{species}.pdf", species=SPECIES),
+        expand("pairwise_identity/{species}.pdf", species=SPECIES),
         "dotplots.pdf"
     params: sge_opts=""
 
