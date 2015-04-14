@@ -64,7 +64,7 @@ rule plot_pairwise_identity_by_species:
 rule align_regions_by_species:
     input: "query_regions_by_species/{species}.fasta"
     output: "multiple_sequence_alignments_by_species/{species}.fasta"
-    params: sge_opts="-l mfree=10G -pe serial 2", threads="2"
+    params: sge_opts="-l mfree=4G -pe serial 2", threads="2"
     shell: "mafft --auto --thread {params.threads} {input} > {output}"
 
 rule combine_query_regions_by_species:
