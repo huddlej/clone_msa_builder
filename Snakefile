@@ -27,6 +27,8 @@ def _get_clones_for_species(wildcards):
 # Define rules.
 #
 
+localrules: all, get_clone, index_clone
+
 rule all:
     input:
         expand("multiple_sequence_alignments_by_species/{species}.fasta", species=SPECIES),
