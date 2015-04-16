@@ -31,11 +31,24 @@ localrules: all, get_clone, index_clone
 
 rule all:
     input:
-        expand("multiple_sequence_alignments_by_species/{species}.fasta", species=SPECIES),
+        "all_species_alignment.fasta",
+        expand("masked_alignments_by_species/{species}.consensus.fa", species=SPECIES),
         expand("pairwise_identity/{species}.pdf", species=SPECIES),
         expand("plotted_multiple_sequence_alignments_by_species/{species}.html", species=SPECIES),
         "dotplots.pdf"
     params: sge_opts=""
+
+rule align_regions_for_all_species:
+    input: "multiple_sequence_alignments_by_species.fasta"
+    output: "all_species_alignment.fasta"
+    params: sge_opts="-l mfree=4G -pe serial 2", threads="2"
+    shell: "mafft --auto --thread {params.threads} {input} > {output}"
+
+rule merge_multiple_sequence_alignments:
+    input: expand("multiple_sequence_alignments_by_species/{species}.fasta", species=SPECIES)
+    output: "multiple_sequence_alignments_by_species.fasta"
+    params: sge_opts=""
+    shell: "cat {input} > {output}"
 
 rule merge_dotplots:
     input: expand("dotplots/{clone}.pdf", clone=CLONES)
