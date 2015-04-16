@@ -17,11 +17,14 @@ def _get_sequence_for_clone(wildcards):
     """
     return config["clone_paths"][wildcards.clone]
 
-def _get_clones_for_species(wildcards):
-    """
-    Get a list of clone names for the given species.
-    """
-    return ["query_regions/%s.fasta" % clone for clone in config["clones_by_species"][wildcards.species]]
+def _get_files_for_species(filename_template):
+    def _get_clones_for_species(wildcards):
+        """
+        Get a list of clone names for the given species.
+        """
+        return [filename_template % clone for clone in config["clones_by_species"][wildcards.species]]
+
+    return _get_clones_for_species
 
 #
 # Define rules.
@@ -81,7 +84,7 @@ rule align_regions_by_species:
     shell: "mafft --auto --thread {params.threads} {input} > {output}"
 
 rule combine_query_regions_by_species:
-    input: _get_clones_for_species
+    input: _get_files_for_species("query_regions/%s.fasta")
     output: "query_regions_by_species/{species}.fasta"
     params: sge_opts=""
     shell: "sed 's/>/>{wildcards.species}_/' {input} > {output}"
