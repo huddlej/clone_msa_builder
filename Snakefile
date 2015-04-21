@@ -63,7 +63,7 @@ rule show_multiple_sequence_alignment_by_species:
     input: "multiple_sequence_alignments_by_species/{species}.fasta"
     output: "plotted_multiple_sequence_alignments_by_species/{species}.html"
     params: sge_opts=""
-    shell: "showalign -sequence {input} -outfile {output} -order=a -html -width 100 -show S"
+    shell: "showalign -sequence {input} -outfile {output} -order=a -html -width 100 -show=All"
 
 rule plot_pairwise_identity_by_species:
     input: "multiple_sequence_alignments_by_species/{species}.fasta"
