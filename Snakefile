@@ -35,7 +35,8 @@ localrules: all, get_clone, index_clone
 rule all:
     input:
         "all_species_alignment.fasta",
-        expand("masked_alignments_by_species/{species}.consensus.fa", species=SPECIES),
+        expand("merged_query_placements_by_species/{species}.bb", species=SPECIES),
+        #expand("masked_alignments_by_species/{species}.consensus.fa", species=SPECIES),
         expand("pairwise_identity/{species}.pdf", species=SPECIES),
         expand("plotted_multiple_sequence_alignments_by_species/{species}.html", species=SPECIES),
         "dotplots.pdf"
@@ -71,11 +72,11 @@ rule plot_pairwise_identity_by_species:
     params: sge_opts=""
     shell: "Rscript plot_pairwise_identity.R `dirname {input}` {output}"
 
-# rule mask_repeats_in_alignment:
-#     input: alignment="multiple_sequence_alignments_by_species/{species}.fasta", repeats=config["repeat_sequences"]
-#     output: "masked_alignments_by_species/{species}.consensus.fa"
-#     params: sge_opts="", window="1000", window_slide="100"
-#     shell: "mkdir -p `dirname {output}`; cd `dirname {output}`; ln -s ../{input.alignment} .; mam `basename {input.alignment}` -sw={params.window_slide} -ww={params.window} -program=crossmatch -fasta=on -exonfile={input.repeats} -slider=on -pc=c -identity=on -consensus=on -alnstats=on"
+rule mask_repeats_in_alignment:
+    input: alignment="multiple_sequence_alignments_by_species/{species}.fasta", repeats=config["repeat_sequences"]
+    output: "masked_alignments_by_species/{species}.consensus.fa"
+    params: sge_opts="", window="1000", window_slide="100"
+    shell: "mkdir -p `dirname {output}`; cd `dirname {output}`; sed 's/[()]/_/g' ../{input.alignment} > {wildcards.species}.fasta; ln -s {input.repeats} .; mam {wildcards.species}.fasta -sw={params.window_slide} -ww={params.window} -program=crossmatch -fasta=on -exonfile=`basename {input.repeats}` -slider=on -pc=c -identity=on -consensus=on -alnstats=on"
 
 rule align_regions_by_species:
     input: "query_regions_by_species/{species}.fasta"
