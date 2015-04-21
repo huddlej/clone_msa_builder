@@ -105,7 +105,7 @@ rule convert_bed_to_merged_bed:
         else:
             shell("touch {output}")
 
-rule convert_psl_to_merged_bed:
+rule convert_psl_to_bed:
     input: "psl_alignments/{clone}.psl"
     output: "query_placements/{clone}.bed"
     params: sge_opts=""
