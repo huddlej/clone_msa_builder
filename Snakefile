@@ -83,6 +83,24 @@ rule align_regions_by_species:
     params: sge_opts="-l mfree=4G -pe serial 2", threads="2"
     shell: "mafft --auto --thread {params.threads} {input} > {output}"
 
+rule convert_query_placements_to_bigbeds:
+    input: "merged_query_placements_by_species/{species}.bed", "sequence_sizes/{species}.tab"
+    output: "merged_query_placements_by_species/{species}.bb"
+    params: sge_opts=""
+    shell: "bedToBigBed -type=bed6 {input} {output}"
+
+rule combine_query_placements_by_species:
+    input: _get_files_for_species("merged_query_placements/%s.bed")
+    output: "merged_query_placements_by_species/{species}.bed"
+    params: sge_opts=""
+    shell: """sort -k 1,1 -k 2,2n {input} | awk 'OFS="\\t" {{ $5=sprintf("%i", $5); print }}' > {output}"""
+
+rule combine_species_fasta_index_files:
+    input: _get_files_for_species("original_sequences/%s.fasta.fai")
+    output: "sequence_sizes/{species}.tab"
+    params: sge_opts=""
+    shell: "cut -f 1-2 {input} | sort -k 1,1 > {output}"
+
 rule combine_query_regions_by_species:
     input: _get_files_for_species("query_regions/%s.fasta")
     output: "query_regions_by_species/{species}.fasta"
