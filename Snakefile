@@ -37,7 +37,7 @@ rule all:
         "all_species_alignment.fasta",
         expand("merged_query_placements_by_species/{species}.bb", species=SPECIES),
         #expand("masked_alignments_by_species/{species}.consensus.fa", species=SPECIES),
-        expand("pairwise_identity/{species}.pdf", species=SPECIES),
+        #expand("pairwise_identity/{species}.pdf", species=SPECIES),
         expand("plotted_multiple_sequence_alignments_by_species/{species}.html", species=SPECIES),
         "dotplots.pdf"
     params: sge_opts=""
