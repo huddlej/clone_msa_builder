@@ -98,7 +98,7 @@ rule extract_query_region_from_clone:
 rule convert_bed_to_merged_bed:
     input: bed="query_placements/{clone}.bed", clone_index="original_sequences/{clone}.fasta.fai"
     output: "merged_query_placements/{clone}.bed"
-    params: sge_opts="", merge_distance="10000", slop="500"
+    params: sge_opts="", merge_distance="5000", slop="500"
     run:
         if os.stat(input["bed"]).st_size > 0:
             shell("bedtools merge -i {input.bed} -d {params.merge_distance} -s -c 4,5,6 -o distinct,mean,distinct | bedtools slop -i stdin -g {input.clone_index} -b {params.slop} > {output}")
