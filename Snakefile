@@ -39,6 +39,7 @@ rule all:
         #expand("masked_alignments_by_species/{species}.consensus.fa", species=SPECIES),
         #expand("pairwise_identity/{species}.pdf", species=SPECIES),
         expand("plotted_multiple_sequence_alignments_by_species/{species}.html", species=SPECIES),
+        expand("tree_by_species/{species}.pdf", species=SPECIES),
         "dotplots.pdf"
     params: sge_opts=""
 
@@ -59,6 +60,12 @@ rule merge_dotplots:
     output: "dotplots.pdf"
     params: sge_opts=""
     shell: "gs -dBATCH -dNOPAUSE -q -sDEVICE=pdfwrite -sOutputFile={output} `for file in {input}; do if [[ -e $file ]]; then echo $file; fi; done`"
+
+rule build_tree_by_species:
+    input: "multiple_sequence_alignments_by_species/{species}.fasta"
+    output: tree="tree_by_species/{species}.newick", plot="tree_by_species/{species}.pdf"
+    params: sge_opts=""
+    shell: "Rscript build_tree.R {input} {output.tree} {output.plot}"
 
 rule show_multiple_sequence_alignment_by_species:
     input: "multiple_sequence_alignments_by_species/{species}.fasta"
