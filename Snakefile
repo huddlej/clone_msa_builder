@@ -113,7 +113,7 @@ rule combine_query_regions_by_species:
     input: _get_files_for_species("query_regions/%s.fasta")
     output: "query_regions_by_species/{species}.fasta"
     params: sge_opts=""
-    shell: "sed 's/>/>{wildcards.species}_/' {input} > {output}"
+    shell: "sed '/^>/s/>/>{wildcards.species}_/;/^>/s/:/_/g' {input} > {output}"
 
 rule extract_query_region_from_clone:
     input: fasta="original_sequences/{clone}.fasta", regions="merged_query_placements/{clone}.bed"
