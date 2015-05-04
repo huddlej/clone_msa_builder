@@ -43,6 +43,12 @@ rule all:
         "dotplots.pdf"
     params: sge_opts=""
 
+rule show_multiple_sequence_alignment_for_all_species:
+    input: "all_species_alignment.fasta"
+    output: "all_species_alignment.html"
+    params: sge_opts=""
+    shell: "showalign -sequence {input} -outfile {output} -order=a -html -width 100 -show=All"
+
 rule plot_tree_for_all_species:
     input: "all_species_alignment.fasta"
     output: tree="all_species_alignment.newick", plot="all_species_alignment.pdf"
