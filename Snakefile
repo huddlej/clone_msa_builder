@@ -58,7 +58,7 @@ rule plot_tree_for_all_species:
 rule align_regions_for_all_species:
     input: "multiple_sequence_alignments_by_species.fasta"
     output: "all_species_alignment.fasta"
-    params: sge_opts="-l mfree=4G -pe serial 2", threads="2"
+    params: sge_opts="-l mfree=4G -pe serial 4", threads="4"
     shell: "mafft --auto --thread {params.threads} {input} > {output}"
 
 rule merge_multiple_sequence_alignments:
