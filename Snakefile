@@ -34,13 +34,14 @@ localrules: all, get_clone, index_clone
 
 rule all:
     input:
-        "all_species_alignment.fasta",
+        "all_species_alignment.pdf",
+        "all_species_alignment.html",
         expand("merged_query_placements_by_species/{species}.bb", species=SPECIES),
-        #expand("masked_alignments_by_species/{species}.consensus.fa", species=SPECIES),
-        #expand("pairwise_identity/{species}.pdf", species=SPECIES),
         expand("plotted_multiple_sequence_alignments_by_species/{species}.html", species=SPECIES),
-        expand("tree_by_species/{species}.pdf", species=SPECIES),
-        "dotplots.pdf"
+        expand("tree_by_species/{species}.pdf", species=SPECIES)
+        #expand("pairwise_identity/{species}.pdf", species=SPECIES),
+        #"dotplots.pdf"
+        #expand("masked_alignments_by_species/{species}.consensus.fa", species=SPECIES),
     params: sge_opts=""
 
 rule show_multiple_sequence_alignment_for_all_species:
