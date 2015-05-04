@@ -172,4 +172,4 @@ rule get_clone:
     shell: "cat {input} > {output}"
 
 rule clean:
-    shell: "rm -rf query_* psl_alignments/ original_sequences/ multiple_sequence_alignments_by_species/ lav_alignments/ dotplots/ masked_alignments_by_species/ pairwise_identity/ dotplots.pdf merged_query_placements/ plotted_multiple_sequence_alignments_by_species/"
+    shell: "rm -rf query_* psl_alignments/ original_sequences/ multiple_sequence_alignments_by_species/ lav_alignments/ dotplots/ masked_alignments_by_species/ pairwise_identity/ dotplots.pdf merged_query_placements/ plotted_multiple_sequence_alignments_by_species/ merged_query_placements_by_species/ all_species_alignment.fasta multiple_sequence_alignments_by_species.fasta tree_by_species/ sequence_sizes/"
