@@ -43,6 +43,12 @@ rule all:
         "dotplots.pdf"
     params: sge_opts=""
 
+rule plot_tree_for_all_species:
+    input: "all_species_alignment.fasta"
+    output: tree="all_species_alignment.newick", plot="all_species_alignment.pdf"
+    params: sge_opts="-l mfree=4G -pe serial 2", threads="2"
+    shell: "Rscript build_tree.R {input} {output.tree} {output.plot}"
+
 rule align_regions_for_all_species:
     input: "multiple_sequence_alignments_by_species.fasta"
     output: "all_species_alignment.fasta"
