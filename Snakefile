@@ -45,16 +45,33 @@ rule all:
     params: sge_opts=""
 
 rule show_multiple_sequence_alignment_for_all_species:
-    input: "all_species_alignment.fasta"
+    input: "all_species_alignment.refined.fasta"
     output: "all_species_alignment.html"
     params: sge_opts=""
     shell: "showalign -sequence {input} -outfile {output} -order=a -html -width 100 -show=All"
 
 rule plot_tree_for_all_species:
-    input: "all_species_alignment.fasta"
+    input: "all_species_alignment.refined.fasta"
     output: tree="all_species_alignment.newick", plot="all_species_alignment.pdf"
     params: sge_opts="-l mfree=2G"
     shell: "Rscript build_tree.R {input} {output.tree} {output.plot}"
+
+rule refine_masked_alignment_for_all_species:
+    input: "masked_alignment/all_species_alignment.sub.aln.fa"
+    output: "all_species_alignment.refined.fasta"
+    params: sge_opts="-l mfree=4G -pe serial 4", threads="4"
+    shell: "mafft-linsi --thread {params.threads} {input} > {output}"
+
+rule mask_repeats_in_alignment:
+    input: alignment="all_species_alignment.fasta", repeats=config["repeat_sequences"]
+    output: "masked_alignment/all_species_alignment.sub.aln.fa"
+    params: sge_opts="", window="500", window_slide="100"
+    run:
+        try:
+            shell("mkdir -p `dirname {output}`; cd `dirname {output}`; sed 's/[()]/_/g' ../{input.alignment} > all_species_alignment.fasta; ln -s {input.repeats} .; ~calkan/bin/mam all_species_alignment.fasta -sw={params.window_slide} -ww={params.window} -program=crossmatch -fasta=on -exonfile=`basename {input.repeats}` -slider=on -pc=c -keep=off")
+        except Exception as error:
+            if not os.path.exists(output[0]):
+                shell("cp {input.alignment} {output}")
 
 rule align_regions_for_all_species:
     input: "multiple_sequence_alignments_by_species.fasta"
@@ -63,7 +80,7 @@ rule align_regions_for_all_species:
     shell: "mafft --auto --thread {params.threads} {input} > {output}"
 
 rule merge_multiple_sequence_alignments:
-    input: expand("masked_alignments_by_species/{species}/{species}.sub.aln.fa", species=SPECIES)
+    input: expand("multiple_sequence_alignments_by_species/{species}.fasta", species=SPECIES), "../../data/lcr16a/lcr16a.fasta"
     output: "multiple_sequence_alignments_by_species.fasta"
     params: sge_opts=""
     shell: "cat {input} > {output}"
@@ -91,17 +108,6 @@ rule plot_pairwise_identity_by_species:
     output: "pairwise_identity/{species}.pdf"
     params: sge_opts=""
     shell: "Rscript plot_pairwise_identity.R `dirname {input}` {output}"
-
-rule mask_repeats_in_alignment:
-    input: alignment="multiple_sequence_alignments_by_species/{species}.fasta", repeats=config["repeat_sequences"]
-    output: "masked_alignments_by_species/{species}/{species}.sub.aln.fa"
-    params: sge_opts="", window="500", window_slide="100"
-    run:
-        try:
-            shell("mkdir -p `dirname {output}`; cd `dirname {output}`; sed 's/[()]/_/g' ../../{input.alignment} > {wildcards.species}.fasta; ln -s {input.repeats} .; ~calkan/bin/mam {wildcards.species}.fasta -sw={params.window_slide} -ww={params.window} -program=crossmatch -fasta=on -exonfile=`basename {input.repeats}` -slider=on -pc=c -keep=off")
-        except Exception as error:
-            if not os.path.exists(output[0]):
-                shell("cp {input.alignment} {output}")
 
 rule align_regions_by_species:
     input: "query_regions_by_species/{species}.fasta"
