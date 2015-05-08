@@ -35,12 +35,27 @@ localrules: all, get_clone, index_clone
 rule all:
     input:
         "all_species_alignment.pdf",
-        "all_species_alignment.html",
-        expand("merged_query_placements_by_species/{species}.bb", species=SPECIES),
-        expand("plotted_multiple_sequence_alignments_by_species/{species}.html", species=SPECIES),
-        expand("tree_by_species/{species}.pdf", species=SPECIES)
-        #expand("pairwise_identity/{species}.pdf", species=SPECIES),
-        #"dotplots.pdf"
+        "all_species_alignment.html"
+    params: sge_opts=""
+
+rule dotplots:
+    input: "dotplots.pdf"
+    params: sge_opts=""
+
+rule lcr16a_annotations:
+    input: expand("merged_query_placements_by_species/{species}.bb", species=SPECIES),
+    params: sge_opts=""
+
+rule species_trees:
+    input: expand("tree_by_species/{species}.pdf", species=SPECIES)
+    params: sge_opts=""
+
+rule pretty_species_alignments:
+    input: expand("plotted_multiple_sequence_alignments_by_species/{species}.html", species=SPECIES),
+    params: sge_opts=""
+
+rule pairwise_alignment_identities:
+    input: expand("pairwise_identity/{species}.pdf", species=SPECIES)
     params: sge_opts=""
 
 rule show_multiple_sequence_alignment_for_all_species:
