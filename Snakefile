@@ -41,7 +41,6 @@ rule all:
         expand("tree_by_species/{species}.pdf", species=SPECIES)
         #expand("pairwise_identity/{species}.pdf", species=SPECIES),
         #"dotplots.pdf"
-        #expand("masked_alignments_by_species/{species}.consensus.fa", species=SPECIES),
     params: sge_opts=""
 
 rule show_multiple_sequence_alignment_for_all_species:
@@ -195,5 +194,8 @@ rule get_clone:
     params: sge_opts=""
     shell: "cat {input} > {output}"
 
+rule clean_final:
+    shell: "rm -rf multiple_sequence_alignments_by_species.fasta masked_alignment/ all_species_alignment.*"
+
 rule clean:
-    shell: "rm -rf query_* psl_alignments/ original_sequences/ multiple_sequence_alignments_by_species/ lav_alignments/ dotplots/ masked_alignments_by_species/ pairwise_identity/ dotplots.pdf merged_query_placements/ plotted_multiple_sequence_alignments_by_species/ merged_query_placements_by_species/ all_species_alignment.fasta multiple_sequence_alignments_by_species.fasta tree_by_species/ sequence_sizes/"
+    shell: "rm -rf query_* psl_alignments/ original_sequences/ multiple_sequence_alignments_by_species/ lav_alignments/ dotplots/ masked_alignment/ pairwise_identity/ dotplots.pdf merged_query_placements/ plotted_multiple_sequence_alignments_by_species/ merged_query_placements_by_species/ all_species_alignment.* multiple_sequence_alignments_by_species.fasta tree_by_species/ sequence_sizes/"
