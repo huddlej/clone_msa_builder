@@ -80,7 +80,7 @@ rule align_regions_for_all_species:
     shell: "mafft --auto --thread {params.threads} {input} > {output}"
 
 rule merge_multiple_sequence_alignments:
-    input: expand("multiple_sequence_alignments_by_species/{species}.fasta", species=SPECIES), "../../data/lcr16a/lcr16a.fasta"
+    input: expand("multiple_sequence_alignments_by_species/{species}.fasta", species=SPECIES)
     output: "multiple_sequence_alignments_by_species.fasta"
     params: sge_opts=""
     shell: "cat {input} > {output}"
