@@ -35,7 +35,8 @@ localrules: all, get_clone, index_clone
 rule all:
     input:
         "all_species_alignment.pdf",
-        "all_species_alignment.html"
+        "all_species_alignment.html",
+        "all_species_alignment_unmasked.pdf"
     params: sge_opts=""
 
 rule dotplots:
@@ -92,6 +93,12 @@ rule collect_repeat_sequences:
     output: "repeats.fasta"
     params: sge_opts=""
     shell: "cat {input} > {output}"
+
+rule plot_tree_for_all_unmasked_species_sequences:
+    input: "all_species_alignment.fasta"
+    output: tree="all_species_alignment_unmasked.newick", plot="all_species_alignment_unmasked.pdf"
+    params: sge_opts="-l mfree=2G"
+    shell: "Rscript build_tree.R {input} {output.tree} {output.plot}"
 
 rule align_regions_for_all_species:
     input: "multiple_sequence_alignments_by_species.fasta"
