@@ -77,15 +77,21 @@ rule refine_masked_alignment_for_all_species:
     shell: "mafft-linsi --thread {params.threads} {input} > {output}"
 
 rule mask_repeats_in_alignment:
-    input: alignment="all_species_alignment.fasta", repeats=config["repeat_sequences"]
+    input: alignment="all_species_alignment.fasta", repeats="repeats.fasta"
     output: "masked_alignment/all_species_alignment.sub.aln.fa"
     params: sge_opts="", window="500", window_slide="100"
     run:
         try:
-            shell("mkdir -p `dirname {output}`; cd `dirname {output}`; sed 's/[()]/_/g' ../{input.alignment} > all_species_alignment.fasta; ln -s {input.repeats} .; ~calkan/bin/mam all_species_alignment.fasta -sw={params.window_slide} -ww={params.window} -program=crossmatch -fasta=on -exonfile=`basename {input.repeats}` -slider=on -pc=c -keep=off")
+            shell("mkdir -p `dirname {output}`; cd `dirname {output}`; sed 's/[()]/_/g' ../{input.alignment} > all_species_alignment.fasta; ln -s ../{input.repeats} .; ~calkan/bin/mam all_species_alignment.fasta -sw={params.window_slide} -ww={params.window} -program=crossmatch -fasta=on -exonfile=`basename {input.repeats}` -slider=on -pc=c -keep=off")
         except Exception as error:
             if not os.path.exists(output[0]):
                 shell("cp {input.alignment} {output}")
+
+rule collect_repeat_sequences:
+    input: config["repeat_sequences"]
+    output: "repeats.fasta"
+    params: sge_opts=""
+    shell: "cat {input} > {output}"
 
 rule align_regions_for_all_species:
     input: "multiple_sequence_alignments_by_species.fasta"
