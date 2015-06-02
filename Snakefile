@@ -34,7 +34,6 @@ localrules: all, get_clone, index_clone
 
 rule all:
     input:
-        "all_species_alignment.pdf",
         "all_species_alignment.html",
         "all_species_alignment_unmasked.pdf"
     params: sge_opts=""
