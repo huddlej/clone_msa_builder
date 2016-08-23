@@ -248,4 +248,4 @@ rule clean_final:
     shell: "rm -rf multiple_sequence_alignments_by_species.fasta masked_alignment/ all_species_alignment.*"
 
 rule clean:
-    shell: "rm -rf query_* psl_alignments/ original_sequences/ multiple_sequence_alignments_by_species/ lav_alignments/ dotplots/ masked_alignment/ pairwise_identity/ dotplots.pdf merged_query_placements/ plotted_multiple_sequence_alignments_by_species/ merged_query_placements_by_species/ all_species_alignment.* multiple_sequence_alignments_by_species.fasta tree_by_species/ sequence_sizes/"
+    shell: "rm -rf query_* psl_alignments/ original_sequences/ multiple_sequence_alignments_by_species/ lav_alignments/ dotplots/ masked_alignment/ pairwise_identity/ dotplots.pdf merged_query_placements/ plotted_multiple_sequence_alignments_by_species/ merged_query_placements_by_species/ all_species_alignment.* multiple_sequence_alignments_by_species.fasta tree_by_species/ sequence_sizes/ annotated_query_regions/"
