@@ -6,6 +6,7 @@ import os
 configfile: "config.json"
 SPECIES = config["species"]
 CLONES = sorted(config["clone_paths"].keys())
+THREADS = config.get("threads", "2")
 
 #
 # Define helper functions.
@@ -59,7 +60,7 @@ rule pairwise_alignment_identities:
     params: sge_opts=""
 
 rule show_multiple_sequence_alignment_for_all_species:
-    input: "all_species_alignment.refined.fasta"
+    input: "all_species_alignment.fasta"
     output: "all_species_alignment.html"
     params: sge_opts=""
     shell: "showalign -sequence {input} -outfile {output} -order=a -html -width 100 -show=All"
@@ -73,7 +74,7 @@ rule plot_tree_for_all_species:
 rule refine_masked_alignment_for_all_species:
     input: "masked_alignment/all_species_alignment.sub.aln.fa"
     output: "all_species_alignment.refined.fasta"
-    params: sge_opts="-l mfree=4G -pe serial 4", threads="4"
+    params: sge_opts="-l mfree=4G -pe serial 4", threads=THREADS
     shell: "mafft-linsi --thread {params.threads} {input} > {output}"
 
 rule mask_repeats_in_alignment:
@@ -87,12 +88,6 @@ rule mask_repeats_in_alignment:
             if not os.path.exists(output[0]):
                 shell("cp {input.alignment} {output}")
 
-rule collect_repeat_sequences:
-    input: config["repeat_sequences"]
-    output: "repeats.fasta"
-    params: sge_opts=""
-    shell: "cat {input} > {output}"
-
 rule plot_tree_for_all_unmasked_species_sequences:
     input: "all_species_alignment.fasta"
     output: tree="all_species_alignment_unmasked.newick", plot="all_species_alignment_unmasked.pdf"
@@ -102,7 +97,7 @@ rule plot_tree_for_all_unmasked_species_sequences:
 rule align_regions_for_all_species:
     input: "multiple_sequence_alignments_by_species.fasta"
     output: "all_species_alignment.fasta"
-    params: sge_opts="-l mfree=4G -pe serial 4", threads="4"
+    params: sge_opts="-l mfree=4G -pe serial 4", threads=THREADS
     shell: "mafft --auto --thread {params.threads} {input} > {output}"
 
 rule merge_multiple_sequence_alignments:
@@ -138,8 +133,10 @@ rule plot_pairwise_identity_by_species:
 rule align_regions_by_species:
     input: "query_regions_by_species/{species}.fasta"
     output: "multiple_sequence_alignments_by_species/{species}.fasta"
-    params: sge_opts="-l mfree=4G -pe serial 2", threads="2"
-    shell: "mafft --auto --thread {params.threads} {input} > {output}"
+    params: sge_opts="-l mfree=4G -pe serial 2", threads=THREADS
+    shell:
+        "mafft --auto --thread {params.threads} {input} > {output}; "
+        """if [[ ! -s "{output}" ]]; then cat {input} > {output}; fi"""
 
 rule convert_query_placements_to_bigbeds:
     input: "merged_query_placements_by_species/{species}.bed", "sequence_sizes/{species}.tab"
@@ -160,10 +157,36 @@ rule combine_species_fasta_index_files:
     shell: "cut -f 1-2 {input} | sort -k 1,1 > {output}"
 
 rule combine_query_regions_by_species:
-    input: _get_files_for_species("query_regions/%s.fasta")
+    input: _get_files_for_species("annotated_query_regions/%s.fasta")
     output: "query_regions_by_species/{species}.fasta"
     params: sge_opts=""
-    shell: "sed '/^>/s/>/>{wildcards.species}_/;/^>/s/:/_/g' {input} > {output}"
+    shell: "cat {input} | python fold_fasta.py /dev/stdin {output}"
+
+def _get_clone_description(wildcards):
+    return config["clone_descriptions"].get(wildcards.clone, wildcards.clone).replace(" ", "_")
+
+rule annotate_clone_details:
+    input: "query_regions/{clone}.fasta.screen.mask"
+    output: "annotated_query_regions/{clone}.fasta"
+    params: sge_opts="", description=_get_clone_description
+    shell: "sed '/^>/s#>.\+#>{params.description}#;/^>/!s#[NX]##g' {input} > {output}"
+
+rule apply_trf_to_query_region:
+    input: "query_regions/{clone}.fasta.screen"
+    output: "query_regions/{clone}.fasta.screen.mask"
+    shell: "/net/eichler/vol2/local/bin/trf {input} 2 7 7 80 10 50 35 -m || true; mv `basename {input}*.mask` {output}; rm -f {wildcards.clone}*html"
+
+rule mask_repeats_in_query_region:
+    input: clone="query_regions/{clone}.fasta", repeats="repeats.fasta"
+    output: "query_regions/{clone}.fasta.screen"
+    params: sge_opts=""
+    shell: "cross_match {input.clone} {input.repeats} -minmatch 10 -minscore 20 -screen &> /dev/null"
+
+rule collect_repeat_sequences:
+    input: config["repeat_sequences"]
+    output: "repeats.fasta"
+    params: sge_opts=""
+    shell: "cat {input} > {output}"
 
 rule extract_query_region_from_clone:
     input: fasta="original_sequences/{clone}.fasta", regions="merged_query_placements/{clone}.bed"
