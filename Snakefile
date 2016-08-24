@@ -36,7 +36,8 @@ localrules: all, get_clone, index_clone
 rule all:
     input:
         "all_species_alignment.html",
-        "all_species_alignment_unmasked.pdf"
+        "all_species_alignment_unmasked.pdf",
+        "RAxML_bipartitions.tree"
     params: sge_opts=""
 
 rule dotplots:
@@ -58,6 +59,12 @@ rule pretty_species_alignments:
 rule pairwise_alignment_identities:
     input: expand("pairwise_identity/{species}.pdf", species=SPECIES)
     params: sge_opts=""
+
+rule build_tree_with_raxml:
+    input: "all_species_alignment.fasta"
+    output: "RAxML_bipartitions.tree"
+    params: sge_opts=""
+    shell: "raxmlHPC-PTHREADS -T {THREADS} -f a -m GTRGAMMA -x 314159 -p 26535 -# 1000 -k -s {input} -n tree"
 
 rule show_multiple_sequence_alignment_for_all_species:
     input: "all_species_alignment.fasta"
