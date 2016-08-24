@@ -1,0 +1,114 @@
+{
+    "query_sequence": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/lcr16a/lcr16a.fasta",
+    "repeat_sequences": [
+        "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/npip/npip.all.fasta"
+    ],
+    "excluded_repeat_sequences": [
+        "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/marmoset_repeats/marmoset_specific_L1s.fasta"
+    ],
+    "species": ["marmoset", "human", "baboon", "grey_mouse_lemur"],
+    "clones_by_species": {
+        "marmoset": [
+            "CH259-145L14",
+            "CH259-209H22",
+            "CH259-211A21",
+            "CH259-239O23",
+            "CH259-271C3",
+            "CH259-31C12",
+            "CH259-40E8",
+            "CH259-98H16",
+            "CH259-157F5",
+            "CH259-282N4",
+            "CH259-416D4"
+        ],
+        "excluded_marmoset": [
+            "CH259-177K12",
+            "CH259-84B10",
+        ],
+        "grey_mouse_lemur": [
+            "CH257-342N4",
+            "CH257-59J2",
+            "CH257-515L9"
+        ],
+        "excluded_grey_mouse_lemur": [
+            "CH257-7F7"
+        ],
+        "squirrel_monkey": [
+            "CH254-132A4",
+            "CH254-33A23",
+            "CH254-48O22",
+            "CH254-5O3",
+            "CH254-90K9"
+        ],
+        "excluded_squirrel_monkey": [
+            "CH254-97N8"
+        ],
+        "human": [
+            "AC092137.3",
+            "RP11-166B2",
+            "AP001120.5",
+            "AC239367.3",
+            "AL590628.6"
+        ],
+        "excluded_human": [
+            "AC126755.3",
+            "CTD-2343L5"
+        ],
+        "baboon": ["AC092562.4"]
+    },
+    "clone_descriptions": {
+        "CH259-145L14": "CH259-145L14 chr16 FISH tandem dup chr16p",
+        "CH259-157F5": "CH259-157F5 chr2 FISH inter dup chr2q",
+        "CH259-209H22": "CH259-209H22 chr20 FISH adjacent dup chr20",
+        "CH259-211A21": "CH259-211A21 chr4 FISH single chr4",
+        "CH259-239O23": "CH259-239O23 chr16 FISH tandem dup chr16p",
+        "CH259-271C3": "CH259-271C3 chr18/chr11 FISH adjacent single chr11",
+        "CH259-282N4": "CH259-282N4 chrX FISH NA",
+        "CH259-31C12": "CH259-31C12 chr11 FISH tandem dup chr12",
+        "CH259-40E8": "CH259-40E8 chr11 FISH adjacent dup chr11",
+        "CH259-84B10": "CH259-84B10 chr16 FISH NA",
+        "CH259-416D4": "CH259-416D4 chr16 FISH NA",
+        "CH259-98H16": "CH259-98H16 chr11 FISH NA",
+        "AC092137.3": "human RP11-344H15 chr16 ancestral locus",
+        "RP11-166B2": "human RP11-166B2 chr16p13.13",
+        "AP001120.5": "human RP11-677O4 chr18p11.21",
+        "AC239367.3": "human RP11-340D16 chrX",
+        "AC092562.4": "baboon RP41-285I13 chr16 ancestral locus",
+        "CH257-342N4": "grey mouse lemur CH257-342N4 chr16p13.11",
+        "CH257-59J2": "grey mouse lemur CH257-59J2 chr16p13.11",
+        "CH257-515L9": "grey mouse lemur CH257-515L9",
+        "CH257-7F7": "grey mouse lemur CH257-7F7"
+    },
+    "clone_paths": {
+        "CH259-145L14": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/local/marmoset/CH259-145L14.fasta",
+        "CH259-157F5": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/local/marmoset/CH259-157F5.fasta",
+        "CH259-177K12": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/local/marmoset/CH259-177K12.fasta",
+        "CH259-209H22": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/local/marmoset/CH259-209H22.fasta",
+        "CH259-211A21": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/local/marmoset/CH259-211A21.fasta",
+        "CH259-239O23": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/local/marmoset/CH259-239O23.fasta",
+        "CH259-271C3": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/local/marmoset/CH259-271C3.fasta",
+        "CH259-282N4": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/local/marmoset/CH259-282N4.fasta",
+        "CH259-31C12": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/local/marmoset/CH259-31C12.fasta",
+        "CH259-40E8": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/local/marmoset/CH259-40E8.fasta",
+        "CH259-416D4": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/local/marmoset/CH259-416D4.fasta",
+        "CH259-84B10": "/net/eichler/vol18/jlhudd/nisc_core/lcr16a/data/rawFA/AC204444.2",
+        "CH259-98H16": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/local/marmoset/CH259-98H16.fasta",
+        "CH257-342N4": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/local/grey_mouse_lemur/CH257-342N4.fasta",
+        "CH257-515L9": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/local/grey_mouse_lemur/CH257-515L9.fasta",
+        "CH257-59J2": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/local/grey_mouse_lemur/CH257-59J2.fasta",
+        "CH257-7F7": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/local/grey_mouse_lemur/CH257-7F7.fasta",
+        "CH254-132A4": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/local/squirrel_monkey/CH254-132A4.fasta",
+        "CH254-33A23": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/local/squirrel_monkey/CH254-33A23.fasta",
+        "CH254-48O22": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/local/squirrel_monkey/CH254-48O22.fasta",
+        "CH254-5O3": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/local/squirrel_monkey/CH254-5O3.fasta",
+        "CH254-90K9": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/local/squirrel_monkey/CH254-90K9.fasta",
+        "CH254-97N8": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/local/squirrel_monkey/CH254-97N8.fasta",
+        "RP11-166B2": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/genbank/human/AC007216.2",
+        "AC092137.3": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/genbank/human/AC092137.3",
+        "AC126755.3": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/genbank/human/AC126755.3",
+        "AP001120.5": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/genbank/human/AP001120.5",
+        "AC092562.4": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/genbank/baboon/AC092562.4",
+        "AC239367.3": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/genbank/human/AC239367.3",
+        "AL590628.6": "/net/eichler/vol4/home/jlhudd/projects/LCR16a/data/clones/genbank/human/AL590628.6"
+    }
+}
